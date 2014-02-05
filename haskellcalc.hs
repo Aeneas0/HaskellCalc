@@ -1,8 +1,7 @@
-{-main = do
+main = do
 	putStrLn "Please enter an expression to evaluate."
 	seq <- getLine
 	print $ readRPN $ shuntingYard $ words seq
-	-}
 	
 isNum :: String -> Bool
 isNum str
@@ -56,5 +55,3 @@ readRPN = head . foldl foldingFunction []
 		foldingFunction (x:y:ys) "/" = (y / x):ys
 		foldingFunction (x:y:ys) "^" = (y ** x):ys
 		foldingFunction xs numberString = (read numberString :: Double):xs
-		
-	
