@@ -4,11 +4,14 @@
 	print $ readRPN $ shuntingYard $ words seq
 	-}
 	
-	
-isNum :: String -> Bool --Note: Returns false for all negative integers.
-isNum = all isDigit
+isNum :: String -> Bool
+isNum str
+	| str == "-" = False
+	| otherwise = all isDigit str
 	where isDigit n
 		| n `elem` ['0'..'9'] = True
+		| n == '-'	  	  	  = isNum $ tail str
+		| n == '.'			  = isNum $ tail str
 		| otherwise 		  = False
 
 isOp :: String -> Bool
@@ -26,7 +29,7 @@ getPrecedence n
 	| otherwise			  = -1
 	
 shuntingYard :: [String] -> [String]
-shuntingYard xs = reverse $ parse xs ([], []) --is reverse necessary?
+shuntingYard xs = reverse $ parse xs ([], [])
 	where 
 		parse [] ([], outs) = outs
 		parse [] ((o:ops), outs) = parse [] (ops, (o:outs))	
@@ -52,6 +55,6 @@ readRPN = head . foldl foldingFunction []
 		foldingFunction (x:y:ys) "-" = (y - x):ys
 		foldingFunction (x:y:ys) "/" = (y / x):ys
 		foldingFunction (x:y:ys) "^" = (y ** x):ys
-		foldingFunction xs numberString = read numberString:xs
+		foldingFunction xs numberString = (read numberString :: Double):xs
 		
 	

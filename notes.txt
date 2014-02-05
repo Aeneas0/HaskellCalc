@@ -4,7 +4,5 @@ Main functions finished.
 
 TODO: 
 -Add support for parentheses.
--Add support for negative numbers.
--Add support for decimals.
 -Take a second look at the readRPN function.
 -Add comments.
