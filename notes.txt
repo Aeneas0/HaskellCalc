@@ -1,8 +1,10 @@
 *****Notes for Shunting-Yard algorithm ******
 
 Main functions finished.
+Parentheses handled.
 
 TODO: 
--Add support for parentheses.
 -Take a second look at the readRPN function.
 -Add comments.
+-Consider adding parsing function for input sequence
+(making sure a single whitespace is between every token)

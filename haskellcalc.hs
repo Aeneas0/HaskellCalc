@@ -38,6 +38,14 @@ shuntingYard xs = reverse $ parse xs ([], [])
 		parse (x:xs) ((ops), outs)
 			| isNum x = parse xs (ops, (x:outs))
 			| isOp x = parse xs $ reconfigStack (x:ops, outs)
+			| x == "(" = parse xs (x:ops, outs)
+			| x == ")" = parse xs $ handleParens (ops, outs)
+			
+handleParens :: ([String], [String]) -> ([String], [String])
+handleParens ([], _) = error "Unmatched parentheses."
+handleParens (x:ops, outs)
+	| x == "(" = (ops, outs)
+	| otherwise = handleParens (ops, x:outs)
 			
 reconfigStack :: ([String], [String]) -> ([String], [String])
 reconfigStack (o1:[], outs) = ([o1], outs)
