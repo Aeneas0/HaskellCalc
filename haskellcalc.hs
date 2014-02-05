@@ -1,3 +1,10 @@
+{-main = do
+	putStrLn "Please enter an expression to evaluate."
+	seq <- getLine
+	print $ readRPN $ shuntingYard $ words seq
+	-}
+	
+	
 isNum :: String -> Bool --Note: Returns false for all negative integers.
 isNum = all isDigit
 	where isDigit n
@@ -36,3 +43,15 @@ reconfigStack (o1:o2:xs, outs)
 	| (isLeftAssoc o1 && (getPrecedence o1 == getPrecedence o2)) = reconfigStack (o1:xs, o2:outs)
 	| (getPrecedence o1 < getPrecedence o2) = reconfigStack (o1:xs, o2:outs)
 	| otherwise = (o1:o2:xs, outs)
+	
+readRPN :: [String] -> Double
+readRPN = head . foldl foldingFunction []
+	where 
+		foldingFunction (x:y:ys) "*" = (x * y):ys
+		foldingFunction (x:y:ys) "+" = (x + y):ys
+		foldingFunction (x:y:ys) "-" = (y - x):ys
+		foldingFunction (x:y:ys) "/" = (y / x):ys
+		foldingFunction (x:y:ys) "^" = (y ** x):ys
+		foldingFunction xs numberString = read numberString:xs
+		
+	
