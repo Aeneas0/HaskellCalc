@@ -73,7 +73,13 @@ reconfigStack (o1:o2:xs, outs)
 	| (isLeftAssoc o1 && (getPrecedence o1 == getPrecedence o2)) = reconfigStack (o1:xs, o2:outs)
 	| (getPrecedence o1 < getPrecedence o2) 					 = reconfigStack (o1:xs, o2:outs)
 	| otherwise 												 = (o1:o2:xs, outs)
-	
+
+-------------------------------------------------------------------------------
+-- readRPN: parsing the postfix string.
+-- 
+-- Input: A list of strings in postfix format.
+-- Returns: A double computed from the input string.
+-------------------------------------------------------------------------------
 readRPN :: [String] -> Double
 readRPN = head . foldl folder []
 	where 
