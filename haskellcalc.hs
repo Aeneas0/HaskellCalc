@@ -60,13 +60,18 @@ shuntingYard xs = reverse $ parse xs ([], []) -- format is [input] ([operator st
 			| isOp x   = parse xs $ reconfigStack (x:ops, outs)
 			| x == "(" = parse xs (x:ops, outs)
 			| x == ")" = parse xs $ handleParens (ops, outs)
-			
+
+-- If a right parens is met, the operator stack needs to be 
+-- rewritten. Pops off operators until the matching left parens is found.
 handleParens :: ([String], [String]) -> ([String], [String])
 handleParens ([], _) = error "Unmatched parentheses."
 handleParens (x:ops, outs)
 	| x == "("  = (ops, outs)
 	| otherwise = handleParens (ops, x:outs)
-			
+
+-- If the token is an operator, the operator stack and output list
+-- must be rewritten according to the rules of operator precedence
+-- and association.
 reconfigStack :: ([String], [String]) -> ([String], [String])
 reconfigStack (o1:[], outs) = ([o1], outs)
 reconfigStack (o1:o2:xs, outs)
@@ -89,3 +94,5 @@ readRPN = head . foldl folder []
 		folder (x:y:ys) "/" = (y / x):ys
 		folder (x:y:ys) "^" = (y ** x):ys
 		folder xs num 	    = (read num :: Double):xs
+
+--EOF
