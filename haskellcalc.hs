@@ -88,3 +88,5 @@ readRPN = head . foldl folder []
 		folder (x:y:ys) "/" = (y / x):ys
 		folder (x:y:ys) "^" = (y ** x):ys
 		folder xs num 	    = (read num :: Double):xs
+
+--EOF
