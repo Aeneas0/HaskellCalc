@@ -76,8 +76,8 @@ reconfigStack :: ([String], [String]) -> ([String], [String])
 reconfigStack (o1:[], outs) = ([o1], outs)
 reconfigStack (o1:o2:xs, outs)
 	| (isLeftAssoc o1 && (getPrecedence o1 == getPrecedence o2)) = reconfigStack (o1:xs, o2:outs)
-	| (getPrecedence o1 < getPrecedence o2) 					 = reconfigStack (o1:xs, o2:outs)
-	| otherwise 												 = (o1:o2:xs, outs)
+	| (getPrecedence o1 < getPrecedence o2)                      = reconfigStack (o1:xs, o2:outs)
+	| otherwise                                                  = (o1:o2:xs, outs)
 
 -------------------------------------------------------------------------------
 -- readRPN: parsing the postfix string.
@@ -93,4 +93,5 @@ readRPN = head . foldl folder []
 		folder (x:y:ys) "-" = (y - x):ys
 		folder (x:y:ys) "/" = (y / x):ys
 		folder (x:y:ys) "^" = (y ** x):ys
-		folder xs num 	    = (read num :: Double):xscd c
+		folder (x:xs)   "(" = error "Unmatched parentheses."
+		folder xs num 	    = (read num :: Double):xs
