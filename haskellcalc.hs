@@ -3,11 +3,12 @@
 -- Input: A string of a mathematical expression in either infix or postfix format.
 -- Returns: The computed result as a double.
 -------------------------------------------------------------------------------
+
 main = do
 	putStrLn "Please enter an expression to evaluate."
 	seq <- getLine
 	print $ readRPN $ shuntingYard $ words seq
-
+	
 -------------------------------------------------------------------------------
 -- Functions to determine the identity, association, and precedence of a token.
 -- Used by the shunting-yard algorithm.
@@ -61,17 +62,18 @@ shuntingYard xs = reverse $ parse xs ([], []) -- format is [input] ([operator st
 			| x == "(" = parse xs (x:ops, outs)
 			| x == ")" = parse xs $ handleParens (ops, outs)
 
--- If a right parens is met, the operator stack needs to be 
--- rewritten. Pops off operators until the matching left parens is found.
+-- Called when a right parens is met. Pops operators off the operator stack
+-- until a left parens is met, or returns an error if no left parens is found.
 handleParens :: ([String], [String]) -> ([String], [String])
 handleParens ([], _) = error "Unmatched parentheses."
 handleParens (x:ops, outs)
 	| x == "("  = (ops, outs)
 	| otherwise = handleParens (ops, x:outs)
 
--- If the token is an operator, the operator stack and output list
--- must be rewritten according to the rules of operator precedence
--- and association.
+-- Called when the current token is an operator and there is at least one operator
+-- on the operator stack. 
+-- Rearranges the operator stack and output according to the rules of the shunting
+-- yard algorithm.
 reconfigStack :: ([String], [String]) -> ([String], [String])
 reconfigStack (o1:[], outs) = ([o1], outs)
 reconfigStack (o1:o2:xs, outs)
